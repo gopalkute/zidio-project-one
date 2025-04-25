@@ -6,9 +6,9 @@ import { createError, errorCodes } from "../utils/index.js";
 import { env } from "../config/index.js";
 
 const cookieOptions = {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None'
+    // httpOnly: true,
+    // secure: true,
+    // sameSite: 'None'
 }
 
 const generateAccessAndRefereshTokens = async (id) => {
