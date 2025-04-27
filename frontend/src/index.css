@@ -39,8 +39,8 @@
 
 
   /* for custom theme color */
-  --primary-background: #f5f7f8;
-  --secondary-background: #e3e7e8;
+  /* --primary-background: #f5f7f8; */
+  /* --secondary-background: #e3e7e8; */
 }
 
 .dark {
@@ -77,8 +77,8 @@
   --sidebar-ring: oklch(0.556 0 0);
 
   /* for custom theme color */
-  --primary-background: #0b1618;
-  --secondary-background: #162529;
+  /* --primary-background: #0b1618; */
+  /* --secondary-background: #162529; */
 }
 
 @theme inline {
@@ -119,8 +119,8 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /* custom theme variable */
-  --color-primary-background: var(--primary-background);
-  --color-secondary-background: var(--secondary-background);
+  /* --color-primary-background: var(--primary-background); */
+  /* --color-secondary-background: var(--secondary-background); */
 }
 
 @layer base {
