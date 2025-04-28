@@ -12,7 +12,7 @@
  * @property {string} NOT_FOUND - Catch-all route for 404 pages
  */
 const PATHS = {
-    HOME: "/",
+    WELCOME: "/welcome",
     SIGNIN: "/sign-in",
     SIGNUP: "/sign-up",
     DASHBOARD: "/dashboard",

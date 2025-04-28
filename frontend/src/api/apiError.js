@@ -100,7 +100,7 @@ export const handleApiError = (error, fieldsToHandle = []) => {
         return { fieldErrors: null, genericErrors: { [!error.status ? 'client' : 'server']: error.message } }
     }
 
-    let fieldErrors = null;
+    let fieldErrors = null; 
     let genericErrors = null;
     for (const [key, value] of Object.entries(error.serverErrors)) {
         if (Array.isArray(fieldsToHandle) && fieldsToHandle.length > 0 && fieldsToHandle.includes(key)) {

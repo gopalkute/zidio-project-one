@@ -8,23 +8,19 @@
  * @constant {string}
  * @default 'http://localhost:8080/api'
  */
-export const API_BASE_URL = 'http://localhost:8080/api'
+export const API_BASE_URL = 'http://localhost:5000/api'
 
 /**
  * Collection of API endpoints organized by feature
  * @constant {Object}
  * @property {Object} AUTH - Authentication related endpoints
- * @property {string} AUTH.REGISTER - User registration endpoint
- * @property {string} AUTH.LOGIN - User login endpoint
- * @property {string} AUTH.REQUEST_VERFICATION - Verification request endpoint
- * @property {string} AUTH.VERIFY_OTP - OTP verification endpoint
- * @property {string} AUTH.RESEND_OTP - OTP resend endpoint
- * @property {string} AUTH.FORGOT_PASSWORD - Password reset request endpoint
+ * @property {string} AUTH.SIGNUP - User registration endpoint
+ * @property {string} AUTH.SIGNIN - User login endpoint
  */
 export const API_ENDPOINTS = {
     AUTH: {
-        REGISTER: '/user/auth/register',
-        LOGIN: '/user/auth/login',
+        SIGNUP: '/user/auth/signup',
+        SIGNIN: '/user/auth/signin',
     }
 }
 

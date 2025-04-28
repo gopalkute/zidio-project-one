@@ -3,7 +3,7 @@
  * @description Application route configuration
  */
 
-import { Signin, Signup } from "@/pages";
+import { LandingPage, Signin, Signup } from "@/pages";
 import { PATHS } from "@/utils";
 import { createBrowserRouter, Navigate } from "react-router";
 
@@ -14,7 +14,10 @@ import { createBrowserRouter, Navigate } from "react-router";
  */
 const Router = createBrowserRouter([{
     path: '/',
-    element: <Navigate to={PATHS.SIGNIN} replace />
+    element: <Navigate to={PATHS.WELCOME} replace />
+}, {
+    path: PATHS.WELCOME,
+    element: <LandingPage />
 }, {
     path: PATHS.SIGNIN,
     element: <Signin />

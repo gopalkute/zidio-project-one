@@ -4,8 +4,8 @@ import { validateUser } from "../middleware/index.js";
 
 const userRouter = express.Router();
 
-userRouter.post('/register', registerUser);
-userRouter.post('/login', loginUser);
+userRouter.post('/auth/signup', registerUser);
+userRouter.post('/auth/signin', loginUser);
 
 // test/development only routes
 userRouter.get('/validate', validateUser, (req, res) => {
