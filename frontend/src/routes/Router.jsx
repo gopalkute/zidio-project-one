@@ -3,9 +3,10 @@
  * @description Application route configuration
  */
 
-import { LandingPage, Signin, Signup } from "@/pages";
-import { PATHS } from "@/utils";
 import { createBrowserRouter, Navigate } from "react-router";
+import { PATHS } from "@/utils";
+import { LandingLayout } from "@/layout";
+import { Signin, Signup, Welcome } from "@/pages";
 
 
 /**
@@ -16,15 +17,21 @@ const Router = createBrowserRouter([{
     path: '/',
     element: <Navigate to={PATHS.WELCOME} replace />
 }, {
-    path: PATHS.WELCOME,
-    element: <LandingPage />
-}, {
-    path: PATHS.SIGNIN,
-    element: <Signin />
-}, {
-    path: PATHS.SIGNUP,
-    element: <Signup />
-}
+    path: '/',
+    element: <LandingLayout />,
+    children: [
+        {
+            path: PATHS.WELCOME,
+            element: <Welcome />
+        }, {
+            path: PATHS.SIGNIN,
+            element: <Signin />
+        }, {
+            path: PATHS.SIGNUP,
+            element: <Signup />
+        },
+    ]
+},
 ]);
 
 export default Router;

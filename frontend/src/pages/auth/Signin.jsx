@@ -40,56 +40,67 @@ function Signin() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Signin Form Centered */}
-      <div className="flex-1 flex items-center justify-center bg-gradient-to-r from-teal-500 to-blue-600 p-6">
-        <div className="bg-white shadow-lg rounded-xl w-full max-w-sm p-8">
-          <h2 className="text-3xl font-semibold text-center text-gray-800 mb-4">Welcome Back!</h2>
-          <p className="text-center text-gray-600 mb-6">Log in to continue your journey.</p>
+    <div className="flex flex-col min-h-screen">
+    
 
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {/* Main Content */}
+      <main className="flex flex-col flex-grow bg-gradient-to-r from-teal-500 to-blue-600 p-6">
+        <div className="flex flex-grow items-center justify-center w-full">
+          <div className="bg-white shadow-2xl rounded-2xl w-full max-w-sm p-8">
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Welcome Back!</h2>
+            <p className="text-center text-gray-600 mb-6">Log in to continue your journey.</p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Input */}
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition ease-in-out"
-            />
-            {/* Password Input */}
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition ease-in-out"
-            />
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className={`w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold py-3 rounded-lg focus:outline-none hover:bg-gradient-to-l hover:from-teal-600 hover:to-blue-700 cursor-pointer shadow-md transition ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={loading}
-            >
-              {loading ? 'Signing In...' : 'Sign In'}
-            </button>
-          </form>
+            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-          <p className="text-center text-gray-600 mt-4">
-            Don't have an account?{' '}
-            <Link to="/sign-up" className="text-teal-500 hover:text-teal-600">
-              Sign up
-            </Link>
-          </p>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label htmlFor="email" className="block text-gray-700 font-semibold mb-1">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-gray-700 font-semibold mb-1">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className={`w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 rounded-lg focus:outline-none hover:bg-gradient-to-l hover:from-teal-600 hover:to-blue-700 shadow-md transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={loading}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
+              </button>
+            </form>
+
+            <p className="text-center text-gray-600 mt-6">
+              Don't have an account?{' '}
+              <Link to="/sign-up" className="text-teal-500 hover:text-teal-600 font-semibold">
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
-      </div>
-
+      </main>
     </div>
+
   );
 }
 
