@@ -15,15 +15,31 @@ function Signup() {
     termsAccepted: false,
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [errors, setErrors] = useState({
+    passwordMismatch: '',
+    emailExists: '',
+  });
+
+  // Mock existing emails
+  const existingEmails = ['test@example.com', 'user@example.com'];
 
   // Handle input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+
     setFormData(draft => {
-      draft[name] = value;
+      draft[name] = type === 'checkbox' ? checked : value;
     });
+
+    if (name === 'password' || name === 'confirmPassword') {
+      setErrors((prev) => ({ ...prev, passwordMismatch: '' }));
+    }
+    if (name === 'email') {
+      setErrors((prev) => ({ ...prev, emailExists: '' }));
+    }
   };
 
   // togle checkbox change
@@ -39,29 +55,41 @@ function Signup() {
     setPasswordVisible(prev => !prev);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(prev => !prev);
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     // Connect API here
     //setloading = true
-    try {
-      e.preventDefault();
-      const { success, fieldErrors, genericErrors } = await signup({ username: formData.username, email: formData.email, password: formData.password })
-      if (success) {
-        console.log('Signup Form Submitted:', formData);
-        navigate(PATHS.SIGNIN);
-      }
+    e.preventDefault();
 
-      if (fieldErrors) {
-        // then show individually at the end of the field or directly can show wrong credentials at the top of login form(so user won't get idea that what is wrong)
-      }
+    if (formData.password !== formData.confirmPassword) {
+      setErrors((prev) => ({
+        ...prev,
+        passwordMismatch: 'Passwords do not match',
+      }));
+      return;
+    }
 
-      // so generic error like internal server errors, client error etc...
-    } catch (error) {
-      console.log(error);
+    if (existingEmails.includes(formData.email)) {
+      setErrors((prev) => ({
+        ...prev,
+        emailExists: 'Account with this email already exists',
+      }));
+      return;
     }
-    finally {
-      //setloading = false
-    }
+
+    console.log('Signup Form Submitted:', formData);
+
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      termsAccepted: false,
+    });
   };
 
   // Password strength validation
@@ -90,12 +118,14 @@ function Signup() {
 
 
   return (
-    <div className="bg-gradient-to-r from-teal-500 to-blue-600 flex items-center">
+    <div className="min-h-screen bg-gradient-to-r from-teal-500 to-blue-600 flex flex-col">
 
-      <div className="bg-white shadow-lg rounded-xl w-full max-w-sm p-8 mx-auto">
+      <div className="relative bg-white shadow-lg rounded-2xl w-full max-w-md p-8 mx-auto mt-10">
         <h2 className="text-3xl font-semibold text-center text-gray-800 mb-4">Create Your Account</h2>
         <p className="text-center text-gray-600 mb-6">Join us and unlock the possibilities!</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
+
+          {/* Username */}
           <input
             type="text"
             name="username"
@@ -105,6 +135,8 @@ function Signup() {
             required
             className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
+
+          {/* Email */}
           <input
             type="email"
             name="email"
@@ -114,6 +146,11 @@ function Signup() {
             required
             className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
+          {errors.emailExists && (
+            <p className="text-red-500 text-sm">{errors.emailExists}</p>
+          )}
+
+          {/* Password */}
           <div className="relative">
             <input
               type={passwordVisible ? 'text' : 'password'}
@@ -124,51 +161,70 @@ function Signup() {
               required
               className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-3 top-3 text-gray-500"
-            >
-              {passwordVisible ? '👁️‍🗨️' : '👁️'}
-            </button>
+            {formData.password && (
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-3 text-gray-500 text-xl"
+              >
+                {passwordVisible ? '🙈' : '👁️'}
+              </button>
+            )}
           </div>
 
           {/* Password Strength Indicator */}
           {formData.password && (
-            <div className="text-sm mt-2">
+            <div className="text-sm mt-1">
               <span className={`${getPasswordStrengthColor(formData.password)}`}>
                 {getPasswordStrength(formData.password)}
               </span>
             </div>
           )}
 
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
-          />
+          {/* Confirm Password */}
+          <div className="relative">
+            <input
+              type={confirmPasswordVisible ? 'text' : 'password'}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              className="w-full pl-3 p-3 pr-12 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+            {formData.confirmPassword && (
+              <button
+                type="button"
+                onClick={toggleConfirmPasswordVisibility}
+                className="absolute right-3 top-3 text-gray-500 text-xl"
+              >
+                {confirmPasswordVisible ? '🙈' : '👁️'}
+              </button>
+            )}
+          </div>
+          {errors.passwordMismatch && (
+            <p className="text-red-500 text-sm">{errors.passwordMismatch}</p>
+          )}
 
-          <div className="flex items-center mb-4">
+          {/* Terms */}
+          <div className="flex items-start gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
               name="termsAccepted"
               checked={formData.termsAccepted}
               onChange={handleCheckboxChange}
               required
-              className="h-4 w-4 text-teal-500 focus:ring-teal-500"
+              className="h-4 w-4 text-teal-500 focus:ring-teal-500 mt-1"
             />
-            <label className="ml-2 text-gray-600">
+            <label>
               I agree to the{' '}
-              <Link to="/terms" className="text-teal-500 hover:text-teal-600">
+              <Link to="/terms" className="text-teal-500 hover:text-teal-600 underline">
                 Terms and Conditions
               </Link>
             </label>
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold py-3 rounded-lg focus:outline-none hover:bg-gradient-to-l hover:from-teal-600 hover:to-blue-700 cursor-pointer shadow-md"
@@ -197,39 +253,41 @@ function Signup() {
         </form>
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg relative">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">Reset Password</h3>
 
-            <form onSubmit={handleResetSubmit} className="space-y-4">
-              <input
-                type="email"
-                placeholder="Enter your registered email"
-                value={resetEmail}
-                onChange={(e) => setResetEmail(e.target.value)}
-                required
-                className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
+      {/* Reset Password Modal */}
+      {
+        isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
               <button
-                type="submit"
-                className="w-full bg-teal-500 hover:bg-teal-600 text-white py-3 rounded-lg shadow-md"
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold"
               >
-                Send Reset Link
+                &times;
               </button>
-            </form>
 
-            {/* Close Modal Button */}
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 right-3 text-gray-400 hover:text-gray-600 text-2xl font-bold"
-            >
-              &times;
-            </button>
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">Reset Password</h3>
+
+              <form onSubmit={handleResetSubmit} className="space-y-5">
+                <input
+                  type="email"
+                  placeholder="Enter your registered email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  required
+                  className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 rounded-lg shadow-md"
+                >
+                  Send Reset Link
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
     </div>
   );

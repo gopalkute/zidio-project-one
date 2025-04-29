@@ -40,7 +40,7 @@ function Signin() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
     
 
       {/* Main Content */}
@@ -100,7 +100,6 @@ function Signin() {
         </div>
       </main>
     </div>
-
   );
 }
 
