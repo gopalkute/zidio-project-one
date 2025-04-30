@@ -6,7 +6,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { PATHS } from "@/utils";
 import { LandingLayout } from "@/layout";
-import { Signin, Signup, Welcome } from "@/pages";
+import { About, Contact, Features, PrivacyPolicy, Signin, Signup, TermsOfServices, Welcome } from "@/pages";
 
 
 /**
@@ -29,6 +29,21 @@ const Router = createBrowserRouter([{
         }, {
             path: PATHS.SIGNUP,
             element: <Signup />
+        }, {
+            path: PATHS.ABOUT,
+            element: <About />
+        }, {
+            path: PATHS.CONTACT,
+            element: <Contact />
+        }, {
+            path: PATHS.FEATURES,
+            element: <Features />
+        }, {
+            path: PATHS.TERMS_OF_SERVICES,
+            element: <TermsOfServices />
+        }, {
+            path: PATHS.PRIVACY_POLICY,
+            element: <PrivacyPolicy />
         },
     ]
 },

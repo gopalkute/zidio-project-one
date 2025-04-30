@@ -13,9 +13,16 @@
  */
 const PATHS = {
     WELCOME: "/welcome",
-    SIGNIN: "/sign-in",
     SIGNUP: "/sign-up",
+    SIGNIN: "/sign-in",
+    ABOUT: "/about",
+    FEATURES: "/features",
+    CONTACT: "/contact-us",
+    PRIVACY_POLICY: "/privacy-policy",
+    TERMS_OF_SERVICES: "/terms-of-services",
+
     DASHBOARD: "/dashboard",
+
     NOT_FOUND: "*",
 };
 

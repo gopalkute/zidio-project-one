@@ -1,3 +1,4 @@
+import { PATHS } from '@/utils';
 import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { useImmer } from 'use-immer';
@@ -41,7 +42,7 @@ function Signin() {
 
   return (
     <div className="flex flex-col">
-    
+
 
       {/* Main Content */}
       <main className="flex flex-col flex-grow bg-gradient-to-r from-teal-500 to-blue-600 p-6">
@@ -92,7 +93,7 @@ function Signin() {
 
             <p className="text-center text-gray-600 mt-6">
               Don't have an account?{' '}
-              <Link to="/sign-up" className="text-teal-500 hover:text-teal-600 font-semibold">
+              <Link to={PATHS.SIGNUP} className="text-teal-500 hover:text-teal-600 font-semibold">
                 Sign Up
               </Link>
             </p>

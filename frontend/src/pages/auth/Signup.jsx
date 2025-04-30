@@ -218,7 +218,7 @@ function Signup() {
             />
             <label>
               I agree to the{' '}
-              <Link to="/terms" className="text-teal-500 hover:text-teal-600 underline">
+              <Link to={PATHS.TERMS_OF_SERVICES} className="text-teal-500 hover:text-teal-600 underline">
                 Terms and Conditions
               </Link>
             </label>
@@ -246,7 +246,7 @@ function Signup() {
           {/* Already have account */}
           <p className="text-center text-gray-600 text-sm mt-4">
             Already have an account?{' '}
-            <Link to="/sign-in" className="text-teal-500 hover:text-teal-600 font-medium">
+            <Link to={PATHS.SIGNIN} className="text-teal-500 hover:text-teal-600 font-medium">
               Sign In
             </Link>
           </p>

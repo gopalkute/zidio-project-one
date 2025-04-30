@@ -10,8 +10,8 @@ function Header() {
         </Link>
 
         <nav className="space-x-6">
-          <Link to={PATHS.SIGNUP} className="hover:text-teal-300">Features</Link>
-          <Link to={PATHS.SIGNUP} className="hover:text-teal-300">About</Link>
+          <Link to={PATHS.FEATURES} className="hover:text-teal-300">Features</Link>
+          <Link to={PATHS.ABOUT} className="hover:text-teal-300">About</Link>
           <Link to={PATHS.SIGNIN} className="hover:text-teal-300 font-semibold hover:underline">Sign In</Link>
         </nav>
       </div>
