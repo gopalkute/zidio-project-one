@@ -1,6 +1,6 @@
 import express from "express";
 import { testInsertUser, testDeleteUser, registerUser, loginUser, handleTokenRefresh } from "../controllers/index.js";
-import { validateUser } from "../middleware/index.js";
+import { validateUser } from "../middlewares/index.js";
 
 const userRouter = express.Router();
 
