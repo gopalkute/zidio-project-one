@@ -1,26 +1,15 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import { createError, errorCodes, parseExcelFile } from "../utils/index.js"
 import { DataSet, FileUpload } from "../models/index.js";
 
 export const uploadExcelFile = async (req, res) => {
+    const filePath = req.file?.path;
     try {
         if (!req.file) {
             return res.status(400).json(createError(errorCodes.badRequest, 'excelFile', 'Please provide an excel file to proceed.'))
         }
-        const { filename, originalname, size, path: filePath } = req.file;
-
-        console.log(filename, originalname)
-
-
-        let parsedData;
-        try {
-            parsedData = parseExcelFile(filePath);
-        } catch (error) {
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
-            throw new Error(`Failed to parse Excel file: ${error.message}`);
-        }
+        const { filename, originalname, size } = req.file;
+        let parsedData = parseExcelFile(filePath);
 
         const fileUpload = new FileUpload({
             // userId: req.user.id,
@@ -55,8 +44,12 @@ export const uploadExcelFile = async (req, res) => {
         res.status(500).json(createError(errorCodes.serverError, 'serverError', 'An error occured while uploading and parsing excel file.'));
     }
     finally {
-        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
+        if (filePath) {
+            try {
+                await fs.unlink(filePath);
+            } catch (err) {
+                console.warn('Failed to delete file while uploading excelFile:', err);
+            }
         }
     }
 }

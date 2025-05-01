@@ -1,14 +1,17 @@
-import { PATHS } from '@/utils';
+import { signin } from '@/api';
+import { Spinner1 } from '@/components';
+import { PATHS, showGenericErrorAsToast } from '@/utils';
 import React, { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useImmer } from 'use-immer';
 
 function Signin() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useImmer({
     email: '',
     password: '',
   });
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -18,31 +21,50 @@ function Signin() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
-      setError('All fields are required!');
-      return;
-    }
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setError('Please enter a valid email address!');
-      return;
-    }
-
     setError('');
-    setLoading(true);
 
-    // Simulating API call
-    setTimeout(() => {
-      console.log('Signin Form Submitted:', formData);
-      setLoading(false);
-      // Connect API here
-    }, 2000);
+    setIsLoading(true);
+    try {
+      if (!formData.email || !formData.password) {
+        setError('All fields are required!');
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setError('Please enter a valid email address!');
+        return;
+      }
+
+      const { success, fieldErrors, genericErrors } = await signin({ email: formData.email, password: formData.password });
+      if (success) {
+        navigate(PATHS.DASHBOARD);
+        toast.success("You're in! Let's get started.", TOAST_OPTIONS);
+
+        setFormData(draft => {
+          draft.email = '';
+          draft.password = '';
+        });
+
+        setError('');
+        return;
+      }
+
+      if (fieldErrors && fieldErrors.credentials) {
+        setError(fieldErrors.credentials);
+      }
+      showGenericErrorAsToast(genericErrors);
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col">
-
 
       {/* Main Content */}
       <main className="flex flex-col flex-grow bg-gradient-to-r from-teal-500 to-blue-600 p-6">
@@ -51,7 +73,7 @@ function Signin() {
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Welcome Back!</h2>
             <p className="text-center text-gray-600 mb-6">Log in to continue your journey.</p>
 
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+            {error && <p className="text-red-500 text-center mb-4 border-red-400 bg-red-50 border-1 py-2 rounded-[3px]">{error}</p>}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
@@ -84,11 +106,17 @@ function Signin() {
 
               <button
                 type="submit"
-                className={`w-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold py-3 rounded-lg focus:outline-none hover:bg-gradient-to-l hover:from-teal-600 hover:to-blue-700 shadow-md transition ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={loading}
+                disabled={isLoading}
+                className={`w-full text-white font-bold py-3 rounded-lg focus:outline-none shadow-md transition flex justify-center
+                  ${isLoading
+                    ? 'bg-gradient-to-r from-teal-500 to-blue-600 opacity-50 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-teal-500 to-blue-600 hover:bg-gradient-to-l hover:from-teal-600 hover:to-blue-700 cursor-pointer'
+                  }`}
               >
-                {loading ? 'Signing In...' : 'Sign In'}
+                {isLoading ? <Spinner1 /> : 'Sign In'}
               </button>
+
+
             </form>
 
             <p className="text-center text-gray-600 mt-6">
@@ -98,6 +126,7 @@ function Signin() {
               </Link>
             </p>
           </div>
+
         </div>
       </main>
     </div>

@@ -5,7 +5,7 @@
 
 import { createBrowserRouter, Navigate } from "react-router";
 import { PATHS } from "@/utils";
-import { LandingLayout } from "@/layout";
+import { DashboardLayout, LandingLayout } from "@/layout";
 import { About, Contact, Features, PrivacyPolicy, Signin, Signup, TermsOfServices, Welcome } from "@/pages";
 
 
@@ -46,7 +46,13 @@ const Router = createBrowserRouter([{
             element: <PrivacyPolicy />
         },
     ]
-},
+}, {
+    path: PATHS.DASHBOARD,
+    element: <DashboardLayout />,
+    children: [
+        
+    ]
+}
 ]);
 
 export default Router;

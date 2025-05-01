@@ -23,8 +23,7 @@ const signin = async (userData) => {
         const { data } = await apiClient.post(API_ENDPOINTS.AUTH.SIGNIN, userData);
         return { success: true, data };
     } catch (error) {
-        console.log(error)
-        const { fieldErrors, genericErrors } = handleApiError(error, ['email', 'password']);
+        const { fieldErrors, genericErrors } = handleApiError(error, ['credentials']);
         return { success: false, fieldErrors, genericErrors };
     }
 }
