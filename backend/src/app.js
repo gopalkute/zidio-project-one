@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-import { userRouter } from "./routes/index.js";
+import { uploadRouter, userRouter } from "./routes/index.js";
 import { __rootdir } from "./utils/index.js";
 
 const app = express();
@@ -19,19 +19,20 @@ app.use(cookieParser());                            //to parse cookies from the 
 app.use(express.json());                            //to parse incoming JSON requests (body parsing)
 app.use(express.urlencoded({ extended: true }));    //to parse form data (URL-encoded), allowing nested data with extended: true
 
-app.use(express.static(path.join(__rootdir, 'public')));
+app.use(express.static(path.join(__rootdir, 'public')));  // for testing only (by hitting on localhost:8080/ you'll get .html)
 
 //----routers-----
-app.use('/api/user', userRouter);
+app.use('/api/user', userRouter);                   //user routes
+app.use('/api/upload', uploadRouter);               //upload routes
 
 // 404 fallback (for unmatched routes)
-app.use((_, res) => {
+app.use((_, res) => {                               //if not routes match
     res.status(404).json({ code: 'error', message: 'Not Found' });
 });
 
 // Central error handler
-app.use((err, _, res) => {
-    console.error(err.stack);
+app.use((err, _, res) => {                          
+    console.error(err);
     res.status(500).json({ code: 'error', message: 'Internal server error' });
 });
 

@@ -15,4 +15,7 @@ export const errorCodes = {
     tokenInvalid: 'TOKEN_INVALID',
     tokenTampered: 'TOKEN_TAMPERED',
     tokenMissing: 'TOKEN_MISSING',
+
+    //other
+    wrongType: 'WRONG_TYPE',
 }

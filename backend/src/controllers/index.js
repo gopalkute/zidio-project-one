@@ -1,1 +1,2 @@
-export { testInsertUser, testDeleteUser, registerUser, loginUser, handleTokenRefresh } from './user.controller.js'
+export * from './user.controller.js'
+export * from './upload.controller.js'
