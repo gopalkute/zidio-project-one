@@ -54,14 +54,6 @@ function ChartBuilder({
     handleSheetChange = () => { },
     selectedSheetIndex = 0
 }) {
-    const chartOptionsForSelect = [
-        { label: 'Scatter Plot', value: 'scatter' },
-        { label: 'Bar Chart', value: 'bar' },
-        { label: 'Line Chart', value: 'line' },
-        { label: 'Pie Chart', value: 'pie' },
-        { label: '3D Scatter', value: 'scatter3d' },
-    ];// remove
-
     const [selectedSheet, setSelectedSheet] = useState(sheetNames[0] || '');
     const [chartType, setChartType] = useState('scatter');
     const [xAxis, setXAxis] = useState(headers[0] || '');
@@ -77,14 +69,6 @@ function ChartBuilder({
 
     const plotRef = useRef(null);
     const downloadMenuRef = useRef(null);
-
-    const downloadOptions = [
-        { label: 'SVG - Vector Graphics (Best for print)', value: 'svg' },
-        { label: 'PNG - Image Format (Good for web)', value: 'png' },
-        { label: 'JPEG - Compressed Image', value: 'jpeg' },
-        { label: 'WebP - Modern Image Format', value: 'webp' },
-        { label: 'PDF - Document Format', value: 'pdf' }
-    ];// remove
 
     // Close download menu when clicking outside
     useEffect(() => {
@@ -476,11 +460,6 @@ function ChartBuilder({
                 return;
             }
 
-            // let scale = 1;
-            // let width = clientWidth;
-            // let height = clientHeight; //remove
-
-
             // Determine export parameters based on format
             let scale = 1, width = clientWidth, height = clientHeight;
             switch (downloadFormat) {
@@ -542,23 +521,6 @@ function ChartBuilder({
             toast.error('Failed to download chart. Please try again.', TOAST_OPTIONS);
         }
     }, [chartType, xAxis, yAxis, layout, chartTrace, downloadFormat]);
-
-    const getFormatTooltip = (format) => {
-        switch (format) {
-            case 'svg':
-                return 'Vector format, best for print & scaling';
-            case 'png':
-                return 'Lossless raster format, good for web';
-            case 'jpeg':
-                return 'Compressed image format, smaller file size';
-            case 'webp':
-                return 'Modern compressed format, good for web';
-            case 'pdf':
-                return 'Document format, good for reports & print';
-            default:
-                return '';
-        }
-    };// remove
 
     return (
         <div className="space-y-4">
