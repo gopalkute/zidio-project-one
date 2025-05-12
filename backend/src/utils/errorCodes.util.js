@@ -18,4 +18,5 @@ export const errorCodes = {
 
     //other
     wrongType: 'WRONG_TYPE',
+    limitFileSize: 'LIMIT_FILE_SIZE',
 }

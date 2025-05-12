@@ -21,18 +21,25 @@
  * @property {string} NOT_FOUND - Catch-all route for 404 pages
  */
 const PATHS = {
-    WELCOME: "/welcome",
+    // auth routes
     SIGNUP: "/sign-up",
     SIGNIN: "/sign-in",
 
+    // landing page routes
+    WELCOME: "/welcome",
     ABOUT: "/about",
     FEATURES: "/features",
     CONTACT: "/contact-us",
     PRIVACY_POLICY: "/privacy-policy",
     TERMS_OF_SERVICES: "/terms-of-services",
 
+    // dashboard routes
     DASHBOARD: "/dashboard",
+    FILE_UPLOAD: "file-upload",
+    UPLOADS_HISTORY: "uploads-history",
 
+    // other routes
+    FORBIDDEN: "/FORBIDDEN",
     NOT_FOUND: "*",
 };
 

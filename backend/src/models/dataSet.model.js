@@ -13,31 +13,43 @@ const dataSetSchema = new mongoose.Schema({
             message: "This file haven't uploaded yet."
         }
     },
-    sheetName: {
-        type: String,
-        required: true
-    },
-    headers: {
-        type: [String],
-        required: true
-    },
-    columnTypes: [
-        {
+    sheets: [{
+        sheetName: {
+            type: String,
+            required: true
+        },
+        headers: {
+            type: [String],
+            trim: true
+        },
+        columnTypes: [{
             name: String,
             type: {
                 type: String,
-                enum: ['numeric', 'string', 'date', 'boolean']
+                enum: ['numeric', 'string', 'date', 'boolean'],
+                default: 'String'
             }
+        }],
+        data: {
+            type: Array,
+            default: []
+        },
+        totalRows: {
+            type: Number,
+            default: 0
         }
-    ],
-    data: {
-        type: Array,
-        required: true
-    },
-    totalRows: {
+    }],
+    defaultSheetIndex: {
         type: Number,
-        required: true
+        default: 0
     },
+    totalSheets: {
+        type: Number,
+        default: 1
+    },
+    sheetNames: [{
+        type: String
+    }]
 }, { timestamps: true });
 
 const DataSet = mongoose.model('DataSet', dataSetSchema);

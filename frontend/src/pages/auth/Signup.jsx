@@ -18,8 +18,6 @@ function Signup() {
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
   const [errors, setErrors] = useImmer({
     passwordMismatch: '',
     emailExists: '',
@@ -124,25 +122,14 @@ function Signup() {
   };
 
 
-  // Handle Reset Password Submit
-  const handleResetSubmit = (e) => {
-    e.preventDefault();
-    console.log('Reset link sent to:', resetEmail);
-    // After sending reset link, close modal
-    setTimeout(() => {
-      setIsModalOpen(false);
-      setResetEmail('');
-    }, 1000);
-  };
-
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-teal-500 to-blue-600 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-r from-teal-500 to-blue-600 dark:from-gray-800 dark:to-gray-900 flex flex-col justify-center">
 
-      <div className="relative bg-white shadow-lg rounded-2xl w-full max-w-md p-8 mx-auto mt-10">
-
-        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-4">Create Your Account</h2>
-        <p className="text-center text-gray-600 mb-6">Join us and unlock the possibilities!</p>
+      {/* Signup Card */}
+      <div className="relative bg-background shadow-lg rounded-2xl w-full max-w-md p-8 mx-auto text-foreground">
+        <h2 className="text-3xl font-semibold text-center mb-4">Create Your Account</h2>
+        <p className="text-center mb-6">Join us and unlock the possibilities!</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
@@ -153,7 +140,7 @@ function Signup() {
             value={formData.username}
             onChange={handleChange}
             required
-            className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
 
           {/* Email */}
@@ -165,11 +152,11 @@ function Signup() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             {
               errors.emailExists &&
-              <p className="text-red-500 text-sm pl-1 pt-1">{errors.emailExists}</p>
+              <p className="text-red-500 dark:text-red-400 text-sm pl-1 pt-1">{errors.emailExists}</p>
             }
           </div>
 
@@ -182,14 +169,14 @@ function Signup() {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             {
               formData.password && (
                 <button
                   type="button"
                   onClick={togglePasswordVisibility}
-                  className="absolute right-3 top-4 text-gray-500 text-xl cursor-pointer"
+                  className="absolute right-3 top-4 text-gray-500 dark:text-gray-400 text-xl cursor-pointer"
                 >
                   {passwordVisible ? <Eye /> : <EyeSlash />}
                 </button>
@@ -200,7 +187,7 @@ function Signup() {
             {
               formData.password && (
                 <div className="text-sm pl-2 pt-1">
-                  <span className={`${getPasswordStrengthColor(formData.password)}`}>
+                  <span className={`${getPasswordStrengthColor(formData.password)} dark:text-gray-400`}>
                     {getPasswordStrength(formData.password)}
                   </span>
                 </div>
@@ -217,14 +204,14 @@ function Signup() {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="w-full pl-3 p-3 pr-12 rounded-lg border border-gray-300 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             {
               formData.confirmPassword && (
                 <button
                   type="button"
                   onClick={toggleConfirmPasswordVisibility}
-                  className="absolute right-3 top-4 text-gray-500 text-xl cursor-pointer"
+                  className="absolute right-3 top-4 text-gray-500 dark:text-gray-400 text-xl cursor-pointer"
                 >
                   {confirmPasswordVisible ? <Eye /> : <EyeSlash />}
                 </button>
@@ -232,12 +219,12 @@ function Signup() {
             }
             {
               errors.passwordMismatch &&
-              <p className="text-red-500 text-sm pl-1 pt-1">{errors.passwordMismatch}</p>
+              <p className="text-red-500 dark:text-red-400 text-sm pl-1 pt-1">{errors.passwordMismatch}</p>
             }
           </div>
 
           {/* Terms */}
-          <div className="flex items-start gap-2 text-sm text-gray-600">
+          <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
             <input
               type="checkbox"
               name="termsAccepted"
@@ -248,81 +235,34 @@ function Signup() {
             />
             <label>
               I agree to the{' '}
-              <Link to={PATHS.TERMS_OF_SERVICES} className="text-teal-500 hover:text-teal-600 underline">
-                Terms and Conditions
+              <Link to={PATHS.TERMS_OF_SERVICES} className="text-teal-500 hover:text-teal-600 hover:underline dark:text-teal-400 dark:hover:text-teal-500">
+                Terms and Conditions.
               </Link>
             </label>
           </div>
 
-          {/* Submit */}
+          {/* Submit Button */}
           <button
             type="submit"
             className={`w-full font-semibold py-3 rounded-lg focus:outline-none shadow-md transition-all duration-200 bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:bg-gradient-to-l hover:from-teal-600 hover:to-blue-700 hover:shadow-lg flex justify-center
-            ${isLoading ? 'opacity-50 cursor-not-allowed hover:from-teal-500 hover:to-blue-600 hover:shadow-md' : 'cursor-pointer'}`}
+              ${isLoading ? 'opacity-50 cursor-not-allowed hover:from-teal-500 hover:to-blue-600 hover:shadow-md' : 'cursor-pointer'}`}
             disabled={isLoading}
           >
             {
-              isLoading ? <Spinner1 /> : 'Sign Up'
+              isLoading ? <Spinner1 className='w-5 h-5 border-3 border-loading-spinner-color' /> : 'Sign Up'
             }
           </button>
-
-          {/* Forgot Password */}
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="text-sm text-teal-500 hover:underline cursor-pointer"
-            >
-              Forgot Password?
-            </button>
-          </div>
-
-          {/* Already have account */}
-          <p className="text-center text-gray-600 text-sm">
-            Already have an account?{' '}
-            <Link to={PATHS.SIGNIN} className="text-teal-500 hover:text-teal-600 font-medium">
-              Sign In
-            </Link>
-          </p>
         </form>
+
+        {/* Already have account */}
+        <p className="text-center text-gray-600 dark:text-gray-400 text-sm mt-6">
+          Already have an account?
+          &nbsp;
+          <Link to={PATHS.SIGNIN} className="text-teal-500 hover:underline hover:text-teal-600 font-medium dark:text-teal-400 dark:hover:text-teal-500">
+            Sign In
+          </Link>
+        </p>
       </div>
-
-
-      {/* Reset Password Modal */}
-      {
-        isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold"
-              >
-                &times;
-              </button>
-
-              <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">Reset Password</h3>
-
-              <form onSubmit={handleResetSubmit} className="space-y-5">
-                <input
-                  type="email"
-                  placeholder="Enter your registered email"
-                  value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
-                  required
-                  className="w-full p-3 rounded-lg border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                />
-                <button
-                  type="submit"
-                  className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 rounded-lg shadow-md"
-                >
-                  Send Reset Link
-                </button>
-              </form>
-            </div>
-          </div>
-        )
-      }
-
     </div>
   );
 }

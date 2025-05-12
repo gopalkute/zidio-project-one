@@ -89,7 +89,7 @@ export const createApiError = (error) => {
  * @param {ApiError} error - The error to handle
  * @param {string[]} [fieldsToHandle=[]] - List of field names to extract as field errors
  * @returns {Object} Object containing separated fieldsErrors and genericErrors
- * @returns {Object|null} returns.fieldsErrors - Field-specific errors (for form validation)
+ * @returns {Object|null} returns.fieldErrors - Field-specific errors (for form validation)
  * @returns {Object|null} returns.genericErrors - Generic errors (for toast notifications, etc.)
  */
 export const handleApiError = (error, fieldsToHandle = []) => {
@@ -100,9 +100,10 @@ export const handleApiError = (error, fieldsToHandle = []) => {
         return { fieldErrors: null, genericErrors: { [!error.status ? 'client' : 'server']: error.message } }
     }
 
-    let fieldErrors = null; 
+    let fieldErrors = null;
     let genericErrors = null;
     for (const [key, value] of Object.entries(error.serverErrors)) {
+        console.log(fieldsToHandle,key)
         if (Array.isArray(fieldsToHandle) && fieldsToHandle.length > 0 && fieldsToHandle.includes(key)) {
             if (!fieldErrors) {
                 fieldErrors = {};

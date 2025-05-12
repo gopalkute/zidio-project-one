@@ -1,15 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 
 import { User } from "../models/index.js";
-import { createError, errorCodes } from "../utils/index.js";
+import { cookieOptions, createError, errorCodes } from "../utils/index.js";
 import { env } from "../config/index.js";
-
-const cookieOptions = {
-    // httpOnly: true,
-    // secure: true,
-    // sameSite: 'None'
-}
 
 const generateAccessAndRefereshTokens = async (id) => {
     try {
@@ -55,7 +50,6 @@ export const registerUser = async (req, res) => {
         }
     }
 }
-
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -77,119 +71,114 @@ export const loginUser = async (req, res) => {
         res.status(200)
             .cookie('Auth_Access_Token', accessToken, { ...cookieOptions, maxAge: env.accessTokenMaxAge })
             .cookie('Auth_Refresh_Token', refreshToken, { ...cookieOptions, maxAge: env.refreshTokenMaxAge })
-            .json({ accessToken, refreshToken });
+            .json({ user: existingUser, accessToken, refreshToken });
 
     } catch (error) {
         console.log('Error while authenticating user:', error);
         res.status(500).json(createError(errorCodes.serverError, 'serverError', 'An error occurred while authenticating user. Please try again later.'));
     }
 }
-
+export const logoutUser = async (req, res) => {
+    try {
+        await User.findByIdAndUpdate(req.user._id, { refreshToken: null });
+        return res
+            .status(200)
+            .clearCookie('Auth_Access_Token', cookieOptions)
+            .clearCookie('Auth_Refresh_Token', cookieOptions)
+            .json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.log('Error in logoutUser:', error);
+        return res
+            .status(500)
+            .json(createError(errorCodes.serverError, 'serverError', 'An error occurred while logging out. Please try again later.'));
+    }
+};
 export const handleTokenRefresh = async (req, res) => {
     try {
-        const incomingRefreshToken = req.cookies.refreshToken || req.body?.refreshToken;
+        const incomingRefreshToken = req.cookies.Auth_Refresh_Token || req.body?.refreshToken;
         if (!incomingRefreshToken) {
-            return res.status(401).json(createError(
-                errorCodes.tokenMissing,
-                'refreshToken',
-                'Access denied, A valid token is required.'
-            ));
+            return res.status(401)
+                .clearCookie('Auth_Refresh_Token', cookieOptions)
+                .json(createError(
+                    errorCodes.tokenMissing,
+                    'refreshToken',
+                    'Access denied, A valid token is required.'
+                ));
         }
 
         const decodedRefreshToken = jwt.verify(incomingRefreshToken, env.refreshTokenSecret);
-
         const existingUser = await User.findById(decodedRefreshToken.id, { refreshToken: 1 });
-        if (!existingUser) {
-            return res.status(401).json(createError(
-                errorCodes.tokenInvalid,
-                'refreshToken',
-                'Access denied, A valid token is required.'
-            ));
-        }
 
-        if (incomingRefreshToken !== existingUser.refreshToken) {
-            return res.status(400).json(createError(
-                errorCodes.tokenInvalid,
-                'refreshToken',
-                'Access denied, A valid token is required.'
-            ));
+
+        if (!existingUser || incomingRefreshToken !== existingUser.refreshToken) {
+            return res.status(401)
+                .clearCookie('Auth_Refresh_Token', cookieOptions)
+                .json(createError(
+                    errorCodes.tokenInvalid,
+                    'refreshToken',
+                    'Access denied, A valid token is required.'
+                ));
         }
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(existingUser._id);
-
         res.status(200)
             .cookie('Auth_Access_Token', accessToken, { ...cookieOptions, maxAge: env.accessTokenMaxAge })
             .cookie('Auth_Refresh_Token', refreshToken, { ...cookieOptions, maxAge: env.refreshTokenMaxAge })
             .json({ accessToken, refreshToken });
     } catch (error) {
-        if (error?.name == 'TokenExpiredError') {
-            res.status(401).json(createError(
-                errorCodes.tokenExpired,
-                'refreshToken',
-                'Your access has temporarily expired. Reauthenticate to get back in!'
-            ));
+        if (error instanceof jwt.TokenExpiredError) {
+            res.status(401)
+                .clearCookie('Auth_Refresh_Token', cookieOptions)
+                .json(createError(
+                    errorCodes.tokenExpired,
+                    'refreshToken',
+                    'Your access has temporarily expired. Reauthenticate to get back in!'
+                ));
         }
-        else if (error?.name == 'JsonWebTokenError') {
-            res.status(401).json(createError(
-                errorCodes.tokenTampered,
-                'refreshToken',
-                'It seems the token is corrupted or invalid.'
-            ));
+        else if (error instanceof jwt.JsonWebTokenError) {
+            res.status(401)
+                .clearCookie('Auth_Refresh_Token', cookieOptions)
+                .json(createError(
+                    errorCodes.tokenTampered,
+                    'refreshToken',
+                    'It seems the token is corrupted or invalid.'
+                ));
         }
         else {
-            res.status(500).json(createError(500, 'serverError', 'An error occurred while authenticating your access, Please try again later.'));
+            res.status(500)
+                .json(createError(
+                    errorCodes.serverError,
+                    'serverError',
+                    'An error occurred while authenticating your access. Please try again later.'
+                ));
         }
+        console.log('Error in handleTokenRefresh:', error);
     }
 }
-
-/**
- * Route: POST /api/dev/insert-users
- * Purpose: For test/development use only.
- * Allows inserting:
- *   - A single user (send one user object)
- *   - Multiple users (send an array of user objects)
- * This route won't be available in production!
- */
-export const testInsertUser = async (req, res) => {
+export const getUserProfile = async (req, res) => {
     try {
-        const data = req.body;
-        const isMultiple = Array.isArray(data);
-        let result;
-        if (isMultiple) {
-            result = await User.insertMany(data);
-        } else {
-            const newUser = new User(data);
-            result = await newUser.save();
+        const user = await User.findById(req.user._id, 'email username roles').lean();
+        if (!user) {
+            return res.status(404).json(createError(errorCodes.notFound, 'user', 'User not found.'));
         }
-        res.json({ message: 'User added successfully: ', result });
+        return res.status(200).json({ user });
     } catch (error) {
-        console.log("Error in insert user: ", error);
-        res.json({ message: 'Error adding user: ', error });
+        console.log('Error in getUserProfile:', error);
+        return res.status(500).json(createError(errorCodes.serverError, 'serverError', 'An error occurred while fetching user profile.'));
     }
-}
+};
 
-/**
- * Route: DELETE /api/dev/delete-users
- * Purpose: For test/development use only.
- * Allows deleting:
- *   - All users (by setting { all: true })
- *   - Selected users (by sending their IDs in { ids: [] })
- * This route won't be available in production!
- */
-export const testDeleteUser = async (req, res) => {
-    try {
-        const { ids, all } = req.body;
-        if (all) {
-            const result = await User.deleteMany({});
-            return res.status(200).json({ message: 'All users deleted', deletedCount: result.deletedCount });
-        }
-        if (!ids || !Array.isArray(ids) || ids.length === 0) {
-            return res.status(400).json({ message: 'Provide array of user IDs or set all=true' });
-        }
-        const result = await User.deleteMany({ _id: { $in: ids } });
-        res.status(200).json({ message: 'Selected users deleted', deletedCount: result.deletedCount });
-    } catch (err) {
-        console.error('Error deleting users:', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

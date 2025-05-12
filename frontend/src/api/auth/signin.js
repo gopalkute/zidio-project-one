@@ -20,9 +20,11 @@ import apiClient from "../apiClient";
  */
 const signin = async (userData) => {
     try {
-        const { data } = await apiClient.post(API_ENDPOINTS.AUTH.SIGNIN, userData);
-        return { success: true, data };
+        const res = await apiClient.post(API_ENDPOINTS.AUTH.SIGNIN, userData);
+        console.log('res', res)
+        return { success: true, data: res.data };
     } catch (error) {
+        console.log('Error in api/auth/signin: ', error)
         const { fieldErrors, genericErrors } = handleApiError(error, ['credentials']);
         return { success: false, fieldErrors, genericErrors };
     }

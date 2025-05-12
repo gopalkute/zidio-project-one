@@ -5,14 +5,10 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -28,6 +24,14 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
+
+
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -37,21 +41,27 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
+  --toast-bg: #ffffff;
+  --toast-text: #000000;
 
-  /* for custom theme color */
-  /* --primary-background: #f5f7f8; */
-  /* --secondary-background: #e3e7e8; */
+  --loading-overlay-bg: oklch(0.97 0 0);
+  --loading-spinner-color: oklch(0.205 0 0);
+
+  --fileupload-bg: oklch(1 0 0);
+  --fileupload-text: oklch(0.145 0 0);
+  --fileupload-border: oklch(0.922 0 0);
+  --fileupload-accent: oklch(0.205 0 0);
+  --fileupload-accent-foreground: oklch(0.985 0 0);
+
+  --chart-title-color: oklch(0.145 0 0);
+  --chart-grid-color: oklch(0.20 0 0);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -67,6 +77,14 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+
+
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -76,9 +94,21 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* for custom theme color */
-  /* --primary-background: #0b1618; */
-  /* --secondary-background: #162529; */
+  --toast-bg: #333333;
+  --toast-text: #ffffff;
+
+  --loading-overlay-bg: oklch(0.205 0 0);
+  --loading-spinner-color: oklch(0.985 0 0);
+
+  --fileupload-bg: oklch(0.205 0 0);
+  --fileupload-text: oklch(0.985 0 0);
+  --fileupload-border: oklch(1 0 0 / 10%);
+  --fileupload-accent: oklch(0.488 0.243 264.376);
+  --fileupload-accent-foreground: oklch(0.985 0 0);
+
+
+  --chart-title-color: oklch(0.985 0 0);
+  --chart-grid-color: oklch(1 0 0);
 }
 
 @theme inline {
@@ -86,14 +116,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -109,6 +135,14 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -118,9 +152,24 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* custom theme variable */
-  /* --color-primary-background: var(--primary-background); */
-  /* --color-secondary-background: var(--secondary-background); */
+  --color-toast-bg: var(--toast-bg);
+  --color-toast-text: var(--toast-text);
+
+  --color-loading-overlay-bg: var(--loading-overlay-bg);
+  --color-loading-spinner-color: var(--loading-spinner-color);
+
+  --color-fileupload-bg: var(--fileupload-bg);
+  --color-fileupload-text: var(--fileupload-text);
+  --color-fileupload-border: var(--fileupload-border);
+  --color-fileupload-accent: var(--fileupload-accent);
+  --color-fileupload-accent-foreground: var(--fileupload-accent-foreground);
+
+  --color-chart-title-color: var(--chart-title-color);
+  --color-chart-grid-color: var(--chart-grid-color);
+}
+
+body {
+  @apply bg-background text-foreground transition-colors duration-200;
 }
 
 @layer base {
@@ -130,5 +179,15 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .bg-sidebar {
+    background-color: rgb(var(--color-sidebar));
+  }
+
+  .text-sidebar-foreground {
+    color: rgb(var(--color-sidebar-foreground));
   }
 }

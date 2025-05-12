@@ -21,7 +21,11 @@ export const API_ENDPOINTS = {
     AUTH: {
         SIGNUP: '/user/auth/signup',
         SIGNIN: '/user/auth/signin',
-    }
+        SIGNOUT: '/user/auth/signout',
+        REFRESH: '/user/auth/refresh'
+    },
+    PROFILE: '/user/profile',
+    UPLOAD_EXCEL: '/upload/excel'
 }
 
 /**
@@ -66,7 +70,17 @@ export const API_ERROR_CODES = {
     SERVICE_UNAVAILABLE: 'SERVICE_UNAVAILABLE',
     GATEWAY_TIMEOUT: 'GATEWAY_TIMEOUT',
 
+    // Token-related
+    TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+    TOKEN_INVALID: 'TOKEN_INVALID',
+    TOKEN_TAMPERED: 'TOKEN_TAMPERED',
+    TOKEN_MISSING: 'TOKEN_MISSING',
+
+    //other server errors
+    WRONG_TYPE: 'WRONG_TYPE',
+
     // Generic fallbacks
     CLIENT_ERROR: 'CLIENT_ERROR',
-    UNKNOWN_ERROR: 'UNKNOWN_ERROR'
+    UNKNOWN_ERROR: 'UNKNOWN_ERROR',
+
 };

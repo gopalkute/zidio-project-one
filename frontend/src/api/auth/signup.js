@@ -24,6 +24,7 @@ const signup = async (userData) => {
         const { data } = await apiClient.post(API_ENDPOINTS.AUTH.SIGNUP, userData);
         return { success: true, data };
     } catch (error) {
+        console.log('Error in api/auth/signup: ', error)
         const { fieldErrors, genericErrors } = handleApiError(error, ['email']);
         return { success: false, fieldErrors, genericErrors };
     }

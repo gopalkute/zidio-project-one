@@ -3,7 +3,7 @@ import { Link } from "react-router"
 
 function Footer() {
   return (
-    <footer className="bg-black text-white py-6">
+    <footer className="bg-background text-foreground py-6">
       <div className="container mx-auto text-center px-4">
         <p>&copy; {new Date().getFullYear()} MyApp. All rights reserved.</p>
         <div className="flex justify-center mt-4 space-x-6">
@@ -14,6 +14,6 @@ function Footer() {
       </div>
     </footer>
   )
-}
+} 
 
 export default Footer
