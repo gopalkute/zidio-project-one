@@ -55,7 +55,7 @@ const determineColumnType = (values) => {
         typePercentages[a] > typePercentages[b] ? a : b
     );
 
-    console.log(`Mixed column type detected: ${dominantType} (${typePercentages[dominantType].toFixed(2)}%)`);
+    // console.log(`Mixed column type detected: ${dominantType} (${typePercentages[dominantType].toFixed(2)}%)`);
     return dominantType;
 };
 

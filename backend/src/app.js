@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 
-import { uploadRouter, userRouter } from "./routes/index.js";
+import { adminRouter, analysisRouter, uploadRouter, userRouter } from "./routes/index.js";
 import { __rootdir } from "./utils/index.js";
 
 const app = express();
@@ -24,6 +24,8 @@ app.use(express.static(path.join(__rootdir, 'public')));  // for testing only (b
 //----routers-----
 app.use('/api/user', userRouter);                   //user routes
 app.use('/api/upload', uploadRouter);               //upload routes
+app.use('/api/analysis', analysisRouter);           //analysis routes
+app.use('/api/admin', adminRouter);                 //admin routes
 
 // 404 fallback (for unmatched routes)
 app.use((_, res) => {                               //if not routes match

@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, handleTokenRefresh, logoutUser, getUserProfile } from "../controllers/index.js";
+import { registerUser, loginUser, handleTokenRefresh, logoutUser, getUserProfile, updateUser } from "../controllers/index.js";
 import { validateUser } from "../middlewares/index.js";
 
 const userRouter = express.Router();
@@ -9,8 +9,8 @@ userRouter.post('/auth/signin', loginUser);
 userRouter.post('/auth/signout', validateUser, logoutUser);
 
 userRouter.post('/auth/refresh', handleTokenRefresh);
-
 userRouter.get('/profile', validateUser, getUserProfile);
+userRouter.patch('/update-user', validateUser, updateUser);
 
 
 

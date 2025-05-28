@@ -24,6 +24,27 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    permissions: {
+        type: String,
+        enum: ['Full Access', 'Read Only'],
+        default: 'Full Access'
+    },
+    uploadLimit: {
+        type: mongoose.Schema.Types.Mixed,
+        default: 'unrestricted',
+    validate: {
+            validator: (value) => typeof value === 'number' || value === 'unrestricted',
+            message: 'Upload limit must be a number or "unrestricted".'
+        }
+    },
+    analysisLimit: {
+        type: mongoose.Schema.Types.Mixed,
+        default: 'unrestricted',
+        validate: {
+            validator: (value) => typeof value === 'number' || value === 'unrestricted',
+            message: 'Analysis limit must be a number or "unrestricted".'
+        }
+    },
     refreshToken: {
         type: String,
     }

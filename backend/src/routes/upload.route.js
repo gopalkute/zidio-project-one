@@ -1,14 +1,14 @@
 import express from "express";
 import { validateUser } from "../middlewares/index.js";
-import { uploadExcelFileController } from "../controllers/index.js";
+import { getAllUploads, uploadExcelFile } from "../controllers/index.js";
 import { DataSet, FileUpload } from "../models/index.js";
 
 const uploadRouter = express.Router();
-uploadRouter.post('/excel', validateUser, uploadExcelFileController);
+uploadRouter.post('/excel', validateUser, uploadExcelFile);
+uploadRouter.get('/', validateUser, getAllUploads);
 
 
 // ------- test/development only routes ------------- //
-
 // DELETE fileupload/dataset
 uploadRouter.delete('/test-delete-fileuploads-datasets', async (req, res) => {
     try {

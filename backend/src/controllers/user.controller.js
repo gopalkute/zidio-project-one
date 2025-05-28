@@ -6,7 +6,7 @@ import { User } from "../models/index.js";
 import { cookieOptions, createError, errorCodes } from "../utils/index.js";
 import { env } from "../config/index.js";
 
-const generateAccessAndRefereshTokens = async (id) => {
+const generateAccessAndRefreshTokens = async (id) => {
     try {
         const user = await User.findById(id);
         const accessToken = user.generateAccessToken();
@@ -15,7 +15,7 @@ const generateAccessAndRefereshTokens = async (id) => {
         await user.save();
         return { accessToken, refreshToken };
     } catch (error) {
-        console.log('Error in generateAccessAndRefereshTokens: ', error);
+        console.log('Error in generateAccessAndRefreshTokens: ', error);
         throw error;
     }
 }
@@ -67,11 +67,12 @@ export const loginUser = async (req, res) => {
             return res.status(401).json(createError(errorCodes.unauthorized, 'credentials', 'Invalid username or password.'));
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(existingUser._id);
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(existingUser._id);
+        const { password: _, ...safeUser } = existingUser.toObject();
         res.status(200)
             .cookie('Auth_Access_Token', accessToken, { ...cookieOptions, maxAge: env.accessTokenMaxAge })
             .cookie('Auth_Refresh_Token', refreshToken, { ...cookieOptions, maxAge: env.refreshTokenMaxAge })
-            .json({ user: existingUser, accessToken, refreshToken });
+            .json({ user: safeUser, accessToken, refreshToken });
 
     } catch (error) {
         console.log('Error while authenticating user:', error);
@@ -120,12 +121,14 @@ export const handleTokenRefresh = async (req, res) => {
                 ));
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(existingUser._id);
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(existingUser._id);
         res.status(200)
             .cookie('Auth_Access_Token', accessToken, { ...cookieOptions, maxAge: env.accessTokenMaxAge })
             .cookie('Auth_Refresh_Token', refreshToken, { ...cookieOptions, maxAge: env.refreshTokenMaxAge })
             .json({ accessToken, refreshToken });
-    } catch (error) {
+    }
+    catch (error) {
+        console.log('Error in handleTokenRefresh:', error);
         if (error instanceof jwt.TokenExpiredError) {
             res.status(401)
                 .clearCookie('Auth_Refresh_Token', cookieOptions)
@@ -152,7 +155,6 @@ export const handleTokenRefresh = async (req, res) => {
                     'An error occurred while authenticating your access. Please try again later.'
                 ));
         }
-        console.log('Error in handleTokenRefresh:', error);
     }
 }
 export const getUserProfile = async (req, res) => {
@@ -168,17 +170,23 @@ export const getUserProfile = async (req, res) => {
     }
 };
 
+export const updateUser = async (req, res) => {
+    try {
+        const updateData = req.body;
 
+        const updatedUser = await User.findByIdAndUpdate(
+            updateData.id,
+            { $set: updateData },
+            { new: true, runValidators: true }
+        );
 
+        if (!updatedUser) {
+            return res.status(404).json(createError(errorCodes.notFound, 'user', 'User not found.'));
+        }
 
-
-
-
-
-
-
-
-
-
-
-
+        return res.status(200).json(updatedUser);
+    } catch (error) {
+        console.log('Error in updateUser:', error);
+        return res.status(500).json(createError(errorCodes.serverError, 'serverError', 'An error occurred while updating user.'));
+    }
+}

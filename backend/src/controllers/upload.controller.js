@@ -3,7 +3,7 @@ import { createError, errorCodes, parseExcelFile } from "../utils/index.js"
 import { DataSet, FileUpload } from "../models/index.js";
 import { upload } from '../middlewares/index.js';
 
-export const uploadExcelFileController = (req, res, next) => {
+export const uploadExcelFile = (req, res, next) => {
     upload.single('excelFile')(req, res, (err) => {
         if (err) {
             if (err.code === errorCodes.limitFileSize) {
@@ -17,11 +17,11 @@ export const uploadExcelFileController = (req, res, next) => {
             }
             return;
         }
-        processAndSaveExcel(req, res, next);
+        processAndSaveExcelFile(req, res, next);
     });
 }
 
-const processAndSaveExcel = async (req, res) => {
+const processAndSaveExcelFile = async (req, res) => {
     const filePath = req.file?.path;
     try {
         if (!req.file) {
@@ -58,6 +58,7 @@ const processAndSaveExcel = async (req, res) => {
         }
 
         const dataSet = new DataSet({
+            userId: req.user.id,
             fileUploadId: fileUpload._id,
             sheets,
             defaultSheetIndex,
@@ -67,7 +68,7 @@ const processAndSaveExcel = async (req, res) => {
         await dataSet.save();
 
         res.status(201).json({
-            message: 'File uploaded and processed successfully',
+            message: 'File uploaded and processed successfully.',
             fileId: fileUpload._id,
             dataSetId: dataSet._id,
             sheets: sheets.map((sheet, index) => ({
@@ -77,6 +78,7 @@ const processAndSaveExcel = async (req, res) => {
                 data: sheet.data,
                 totalRows: sheet.totalRows,
             })),
+            originalFileName: originalname
         });
     } catch (error) {
         console.log('upload excel file error: ', error)
@@ -90,5 +92,26 @@ const processAndSaveExcel = async (req, res) => {
                 console.warn('Failed to delete file while uploading excelFile:', err);
             }
         }
+    }
+}
+
+export const getAllUploads = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const [fileUploads, totalCount] = await Promise.all([
+            FileUpload.find({ userId }).select('originalName fileSize createdAt').sort({ createdAt: -1 }).limit(30),
+            FileUpload.countDocuments({ userId })
+        ]);
+
+        return res.status(200).json({
+            success: true,
+            message: "Your uploads have been retrieved successfully.",
+            uploads: fileUploads,
+            totalCount
+
+        });
+    } catch (error) {
+        console.log('get excel file error: ', error)
+        res.status(500).json(createError(errorCodes.serverError, 'serverError', 'An error occured while retrieving uploads. Please try again later.'));
     }
 }
